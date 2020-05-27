@@ -1,0 +1,7 @@
+tap "homebrew/bundle"
+tap "homebrew/core"
+brew "antigen"
+brew "caddy"
+brew "carthage"
+brew "fastlane"
+brew "thefuck"
