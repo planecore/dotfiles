@@ -10,6 +10,9 @@ eval $(thefuck --alias)
 # Run ls on every cd
 chpwd() { ls }
 
+# Make tab completion case insensitive
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
 # Prompt Message
 autoload -U colors && colors
 precmd() { prompt }
