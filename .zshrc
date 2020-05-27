@@ -20,10 +20,9 @@ prompt() {
 # Add git information
 git_status() {
   BRANCH=$(git rev-parse --abbrev-ref HEAD 2>&1)
-  if [[ $BRANCH =~ "fatal:" ]]; then
+  if [[ $BRANCH =~ "fatal:" ]] || [[ "$(git rev-parse --show-toplevel)" == "/Users/$(whoami)" ]]; then
     echo ""
   else
     echo " (%{$fg_bold[magenta]%}$BRANCH%{${reset_color}%})"
   fi
 }
-
