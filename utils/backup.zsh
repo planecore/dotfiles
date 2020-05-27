@@ -6,12 +6,9 @@ git add .gitignore
 # Move README.md file
 mv ~/utils/README.md ~/README.md
 
-# Backup Homebrew
-brew bundle dump --global --force
-git add .Brewfile
-
 # Backup zsh config
 git add .zshrc
+git add .antigen.zsh
 
 # Backup scripts
 git add utils

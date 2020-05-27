@@ -1,11 +1,8 @@
 # Add Antigen Bundles
-source /usr/local/share/antigen/antigen.zsh
+source ~/.antigen.zsh
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen apply
-
-# Add fuck command
-eval $(thefuck --alias)
 
 # Run ls on every cd
 chpwd() { ls }
@@ -23,7 +20,7 @@ prompt() {
 # Add git information
 git_status() {
   BRANCH=$(git rev-parse --abbrev-ref HEAD 2>&1)
-  if [[ $BRANCH =~ "fatal:" ]] || [[ "$(git rev-parse --show-toplevel)" == "/Users/$(whoami)" ]]; then
+  if [[ $BRANCH =~ "fatal:" ]] || [[ "$(git rev-parse --show-toplevel)" == "$HOME" ]]; then
     echo ""
   else
     echo " (%{$fg_bold[magenta]%}$BRANCH%{${reset_color}%})"
