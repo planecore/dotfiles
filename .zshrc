@@ -7,6 +7,9 @@ antigen apply
 # Run ls on every cd
 chpwd() { ls }
 
+# Creates and opens a new directory
+dir() { mkdir -p -- "$1" && cd -P -- "$1" }
+
 # Make tab completion case insensitive
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
