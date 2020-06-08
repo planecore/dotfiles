@@ -2,6 +2,7 @@
 
 # Download files from repo
 cd ~
+rm -rf .git
 git init
 git remote add origin https://github.com/planecore/dotfiles.git
 git fetch
