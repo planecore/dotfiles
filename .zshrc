@@ -31,10 +31,12 @@ git_status() {
 }
 
 # Aliases
+alias ~='cd ~'
 alias ..='cd ..'
 alias c='clear'
 
 # Add file.io sharing
+# Taken from https://gist.github.com/gingerbeardman/a7737e4c89fccab8605f8538ddaeec0d
 file.io() {
   URL="https://file.io"
   DEFAULT_EXPIRE="14d" # Default to 14 days
