@@ -35,6 +35,19 @@ alias ~='cd ~'
 alias ..='cd ..'
 alias c='clear'
 
+# Go inside docker container
+docker_sh() {
+  if [ $# -eq 0 ]; then
+      echo "Usage: docker_sh CONTAINER_ID\n"
+      return 1
+  fi
+
+  docker exec -it "$1" bash
+  if [ $? -eq 126 ]; then
+    docker exec -it "$1" sh
+  fi
+}
+
 # Add file.io sharing
 # Taken from https://gist.github.com/gingerbeardman/a7737e4c89fccab8605f8538ddaeec0d
 file.io() {
