@@ -34,6 +34,10 @@ git_status() {
 alias ~='cd ~'
 alias ..='cd ..'
 alias c='clear'
+alias intel='arch -x86_64'
+
+# Enviroment Variables
+export LANG=en_US.UTF-8
 
 # Go inside docker container
 docker_sh() {
