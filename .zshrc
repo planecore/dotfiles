@@ -38,6 +38,7 @@ alias intel='arch -x86_64'
 
 # Enviroment Variables
 export LANG=en_US.UTF-8
+export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
 
 # Go inside docker container
 docker_sh() {
@@ -52,43 +53,56 @@ docker_sh() {
   fi
 }
 
-# Add file.io sharing
-# Taken from https://gist.github.com/gingerbeardman/a7737e4c89fccab8605f8538ddaeec0d
-file.io() {
-  URL="https://file.io"
-  DEFAULT_EXPIRE="14d" # Default to 14 days
+# Function to upload a file to bashupload.com
+upload() {
+    if [ -z "$1" ]; then
+        echo "Usage: upload <file_path>"
+        return 1
+    fi
 
-  if [ $# -eq 0 ]; then
-      echo "Usage: file.io FILE [DURATION]\n"
-      echo "Example: file.io path/to/my/file 1w\n"
-      return 1
-  fi
+    if [ ! -f "$1" ]; then
+        echo "Error: File '$1' does not exist"
+        return 1
+    fi
 
-  FILE=$1
-  EXPIRE=${2:-$DEFAULT_EXPIRE}
+    # Upload the file and get the response
+    response=$(curl -s -F "json=true" -F "files=@$1" https://bashupload.com/)
 
-  if [ ! -f "$FILE" ]; then
-      echo "File ${FILE} not found"
-      return 1
-  fi
+    # Extract the URL from the JSON response
+    url=$(echo "$response" | grep -o '"url":"[^"]*' | cut -d'"' -f4 | sed 's/\\//g')
 
-  RESPONSE=$(curl -# -F "file=@${FILE}" "${URL}/?expires=${EXPIRE}")
+    if [ -z "$url" ]; then
+        echo "Error: Failed to upload file"
+        return 1
+    fi
 
-  RETURN=$(echo "$RESPONSE" | php -r 'echo json_decode(fgets(STDIN))->success;')
+    # Echo the URL
+    echo "$url"
 
-  if [ "1" != "$RETURN" ]; then
-      echo "An error occured!\nResponse: ${RESPONSE}"
-      return 1
-  fi
-
-  KEY=$(echo "$RESPONSE" | php -r 'echo json_decode(fgets(STDIN))->key;')
-  EXPIRY=$(echo "${RESPONSE}" | php -r 'echo json_decode(fgets(STDIN))->link;')
-
-  echo "${URL}/${KEY}" | pbcopy # to clipboard
-  echo "${URL}/${KEY}"  # to terminal
+    # Copy to clipboard if running on macOS
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo -n "$url" | pbcopy
+    fi
 }
 
 # Add nvm support
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+# Add android studio support
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
+
+# bun completions
+[ -s "/Users/matan/.bun/_bun" ] && source "/Users/matan/.bun/_bun"
+
+[[ "$TERM_PROGRAM" == "CodeEditApp_Terminal" ]] && . "/Applications/CodeEdit.app/Contents/Resources/codeedit_shell_integration.zsh"
+
+# Add vscode support
+export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/matan/.cache/lm-studio/bin"
